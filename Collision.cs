@@ -10,6 +10,7 @@ namespace sample1
         {
             internal Vector2 hit_point;
             Object _origin;
+            internal Object collisionObject=null;
 
             internal void ShowRay()
             {
@@ -44,6 +45,7 @@ namespace sample1
                                         if (dots[y].x == obj.boundingBox.lines[n].dots[z].x && dots[y].y == obj.boundingBox.lines[n].dots[z].y)
                                         {
                                             hit_point = new Vector2(dots[y].x,dots[y].y);
+                                            collisionObject = obj;
                                             return true;
                                         }
                                     }

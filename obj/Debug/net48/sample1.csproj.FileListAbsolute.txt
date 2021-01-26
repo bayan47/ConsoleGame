@@ -1,0 +1,10 @@
+Z:\Sources\ConsoleGame\bin\Debug\net48\sample1.exe.config
+Z:\Sources\ConsoleGame\bin\Debug\net48\sample1.exe
+Z:\Sources\ConsoleGame\bin\Debug\net48\sample1.pdb
+Z:\Sources\ConsoleGame\obj\Debug\net48\sample1.csprojAssemblyReference.cache
+Z:\Sources\ConsoleGame\obj\Debug\net48\sample1.AssemblyInfoInputs.cache
+Z:\Sources\ConsoleGame\obj\Debug\net48\sample1.AssemblyInfo.cs
+Z:\Sources\ConsoleGame\obj\Debug\net48\sample1.csproj.CoreCompileInputs.cache
+Z:\Sources\ConsoleGame\obj\Debug\net48\sample1.exe
+Z:\Sources\ConsoleGame\obj\Debug\net48\sample1.pdb
+Z:\Sources\ConsoleGame\bin\Debug\net48\pdcurses.dll

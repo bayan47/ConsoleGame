@@ -5,11 +5,11 @@ namespace sample1
 {
     public class Curses
     {
-        const string ncurses = "libncursesw.so.6.1"; // путь до библиотеки
+        const string ncurses = "libpdcursesw.dll"; // путь до библиотеки
 
         private IntPtr window; // создаем указатель
 
-        [DllImport(ncurses)] // подключение C++ библиотеки для работы с терминалом
+        [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)] // подключение C++ библиотеки для работы с терминалом
         private extern static IntPtr initscr(); // импортирование метода, переводящего терминал в curses-режим
 
         public Curses()
@@ -17,14 +17,14 @@ namespace sample1
             window = initscr();
         }
 
-        [DllImport(ncurses)]
+        [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)]
         private extern static int endwin(); // импортирование метода, приводящего терминал в нормальный режим
         ~Curses()       // деструктор класса
         {
             int result = endwin();
         }
 
-        [DllImport(ncurses)]
+        [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)]
 
         private extern static int cbreak();
 
@@ -33,14 +33,14 @@ namespace sample1
             return cbreak();
         }
 
-        [DllImport(ncurses)]
+        [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)]
         private extern static int halfdelay(int flt);
 
         internal int Halfdelay (int flt)
         {
             return halfdelay(flt);
         }
-        [DllImport(ncurses)]
+        [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)]
 
         private extern static int nodelay(IntPtr window,bool mode);
         
@@ -48,7 +48,7 @@ namespace sample1
         {
             return nodelay(window,mode);
         } 
-        [DllImport(ncurses)]
+        [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)]
         private extern static int mvwprintw(IntPtr window, int y, int x, string message); //импортирование метода, позволяющего напечатать символ по указанным координатам
         public int Print(int x, int y, string message)
         {
@@ -65,7 +65,7 @@ namespace sample1
             return mvwprintw(window, entity.world_position.y, entity.world_position.x, entity.content);
         }
 
-        [DllImport(ncurses)]
+        [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)]
         private extern static int refresh(IntPtr window);
         /// <summary>
         /// Обновить экран
@@ -76,7 +76,7 @@ namespace sample1
         }
 
 
-         [DllImport(ncurses)]
+         [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)]
         private extern static int move(int y, int x);
         /// <summary>
         /// Переместить курсор по координатам
@@ -89,7 +89,16 @@ namespace sample1
         {
             return move(point.y, point.x);
         }
-        [DllImport(ncurses)]
+
+        [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)]
+        private extern static int wclear(IntPtr window);
+
+        public int Clear()
+        {
+            return wclear(window);
+        }
+
+        [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)]
         private extern static int insertln();
         /// <summary>
         /// Вставить строку
@@ -98,7 +107,7 @@ namespace sample1
         {
             return insertln();
         }
-        [DllImport(ncurses)]
+        [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)]
         private extern static int deleteln();
         /// <summary>
         /// Удалить строку
@@ -108,15 +117,15 @@ namespace sample1
             return deleteln();
         }
 
-        [DllImport(ncurses)]
-        private extern static int getch();
+        [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)]
+        private extern static int wgetch(IntPtr window);
 
         public int GetKeyDown()
         {
-            return getch();
+            return wgetch(window);
         }
 
-        [DllImport(ncurses)]
+        [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)]
         private extern static void noecho();
 
         public void noEcho()
@@ -124,7 +133,7 @@ namespace sample1
              noecho();
         }
 
-        [DllImport(ncurses)]
+        [DllImport(ncurses, CallingConvention = CallingConvention.Cdecl)]
         private extern static void curs_set(int mode);
 
         public void SetCursorMode(int mode)

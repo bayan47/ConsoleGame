@@ -7,62 +7,101 @@ namespace sample1
 
     class Program
     {
-      static internal Curses c;
-      static internal List<Object> objects = new List<Object>();
+      static internal Curses c = new Curses();
+        static internal List<Object> objects;
       static internal Vector2 debug_point = new Vector2(1,1);
       static internal int screen_x = 0; // Ширина консольного окна
       static internal int screen_y = 0; // Высота консольного окна
-      
-      static internal long deltasec =0;
-      
+      static internal Stopwatch stopwatch;
+      static internal bool gameover;
+      static internal long deltasec =0; // Начало времени
+      static internal TimeAction time;
+      static internal TimeAction grav;
+      static internal TimeAction addscore;
 
 
-         static void Main(string[] args)
+
+
+
+        static internal void Main(string[] args)
         {
-            Stopwatch stopwatch = new Stopwatch();
+            gameover = false;
+            objects = new List<Object>();
+            stopwatch = new Stopwatch();
             stopwatch.Start();
             
-            c = new Curses();
             c.noEcho();
             c.SetCursorMode(0);
             c.NoDelay(true);
             UpdateScreenSize(out screen_x,out screen_y);
+
+            Player.CreatePlayer(true);
             
-            Object box = new Object(new Box().model,new Vector2(5,5),false);
+           // Object box = new Object(new Box().model,new Vector2(5,5),false);
             c.Refresh();
             Player.window = c;
-            Object box2 = new Object(new Box2().model,new Vector2(25,8),false);
+            //Object box2 = new Object(new Box2().model,new Vector2(25,8),false);
 
             FillCorners();
-            TimeAction time = new TimeAction();
-            TimeAction grav = new TimeAction();
+            time = new TimeAction();
+            grav = new TimeAction();
+            addscore = new TimeAction();
+
            
             
-            while (true)
+            while (Player.lives>0)
             {
                 deltasec = stopwatch.ElapsedMilliseconds;
                 c.Refresh();
+                Player.ShowLives();
+                Player.ShowScores();
                 Player.CheckActions(c.GetKeyDown());
-                PrintDebug(deltasec.ToString());
-                time.Operation(300,10000,CreateRandomBoxes);
-                grav.Operation(50,-1,Gravity);
-
+                time.Operation(75,-1,CreateRandomBoxes);
+                grav.Operation(25,-1,Gravity);
+                addscore.Operation(1000, -1, AddScore);
             }
 
+            GameOver();
 
+        }
+
+
+        static void AddScore()
+        {
+            Player.scores++;
+        }
+        static void GameOver()
+        {
+
+            gameover = true;
+            foreach (Object obj in objects.ToArray())
+            {
+                obj.DestroyObject();
+            }
+            c.Clear();
+            c.Print(new Vector2(screen_x / 2, screen_y / 2), "Game Over");
+            c.Print(new Vector2(screen_x / 2, screen_y / 2 + 1), "Scores:"+Player.scores);
+            c.Print(new Vector2(screen_x / 2-2, screen_y / 2+2), "Restart? (Y/N)");
+            
+            
+
+            while (gameover==true)
+            {
+                Player.CheckActions(c.GetKeyDown());
+            }
         }
 
         static void CreateRandomBoxes()
         {
             Random rand = new Random();
             
-            Object box = new Object(new Box().model,new Vector2(rand.Next(1,screen_x-1),5),false);
+            Object box = new Object(new Box().model,new Vector2(rand.Next(1,screen_x-1),rand.Next(1,10)),false);
 
         }
 
         static void Gravity()
         {
-            foreach (Object obj in objects)
+            foreach (Object obj in objects.ToArray())
             {
                 obj.Fall();
             }

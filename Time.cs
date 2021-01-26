@@ -8,7 +8,7 @@ namespace sample1
         long timestamp2; //время последнего шага времени
        internal delegate void Action();
 
-         internal void Operation(int time_step,int time_out, Action action)
+         internal void Operation(long time_step,long time_out, Action action)
          {
             
              if(Program.deltasec< timestamp+time_out || time_out==-1)
@@ -22,7 +22,9 @@ namespace sample1
              }
          }
 
-         internal TimeAction()
+
+
+        internal TimeAction()
          {
             timestamp = Program.deltasec;
             timestamp2 = timestamp;

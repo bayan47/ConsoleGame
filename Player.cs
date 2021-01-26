@@ -9,42 +9,79 @@ namespace sample1
     {
         static internal Vector2 start_pos = new Vector2(15,10);
         static internal Curses window;
+        static internal int scores = 0;
+        static internal int lives=3;
 
 
-       
-        
-        static internal Object character = new Object(new PlayerModel().model,start_pos,false);
 
+
+        static internal Object character; 
+
+        static internal void CreatePlayer(bool wReady)
+        {
+            if (wReady)
+            {
+                character = new Object(new PlayerModel().model, start_pos, false);
+                character.eraseble = false;
+            }
+        }
+
+        static internal void ShowLives()
+        {
+            Program.c.Print(1, 1, "Lives:" + lives);
+        }
+        static internal void ShowScores()
+        {
+            Program.c.Print(9, 1, "Scores:" + scores);
+        }
       
         static internal void CheckActions(int keycode)
 
         {
-            
-            if (keycode == 100 ) // стрелочка вправо
+            if (Program.gameover == false)
             {
-                character.Move(Vector2.right);
-            } 
-            if (keycode == 97) // стрелочка влево
-            {
-                character.Move(Vector2.left);
-            } 
-            if (keycode == 119 || keycode ==32) // стрелочка вверх
-            {
-                character.Move(Vector2.up*6);
-            } 
-            if (keycode == 115) // стрелочка вниз
-            {
-                character.Move(Vector2.down);
-            } 
 
-
-              if (keycode == 10) // Enter справа
-            {
-                foreach(Object obj in Program.objects)
+                if (keycode == 100) // стрелочка вправо
                 {
-                Collision.BoundingBox.ShowBox(obj.boundingBox);
+                    character.Move(Vector2.right);
                 }
-                Program.c.Print(5,1,Program.objects[5].boundingBox.lines.Count.ToString());
+                if (keycode == 97) // стрелочка влево
+                {
+                    character.Move(Vector2.left);
+                }
+
+
+                if (keycode == 10) // Enter справа
+                {
+                    foreach (Object obj in Program.objects)
+                    {
+                        Collision.BoundingBox.ShowBox(obj.boundingBox);
+                    }
+                    Program.c.Print(5, 1, Program.objects[5].boundingBox.lines.Count.ToString());
+                }
+            }
+
+              if (Program.gameover==true)
+            {
+                if (keycode == 121) // стрелочка вниз
+                {
+                    Program.stopwatch = null;
+                   // Program.c = null;
+                    Program.objects = null;
+                    Program.time = null;
+                    Program.grav = null;
+                    Program.deltasec = 0;
+                    Player.lives = 3;
+                    Program.c.Clear();
+                    scores = 0;
+                    Program.Main(null);
+
+
+                }
+                if (keycode == 110) // стрелочка вниз
+                {
+                    System.Environment.Exit(0);
+                }
             }
             
         }
